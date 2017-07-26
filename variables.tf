@@ -1,0 +1,2 @@
+variable "ip" {}
+variable "playbook" {}
