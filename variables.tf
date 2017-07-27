@@ -1,2 +1,2 @@
-variable "ip" {}
+variable "envs" { type = "list"}
 variable "playbook" {}

@@ -1,3 +1,3 @@
-output "ip" {
-  value = "${var.ip}"
+output "ENVs" {
+  value = "${var.envs}"
 }

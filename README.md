@@ -2,17 +2,46 @@
 
 ## Module usage
 
+### Add special section to the playbook
+You must add this section on the top of playbook that will be used for provision
+
+e.g. `../ansible/playbooks/playbook.yml`
+* Create a runtime inventorty with an ip address of a host
+* Waite for target host is ready for ssh connection
+
+```
+---
+- hosts: localhost
+  vars:
+    gather_facts: true
+  tasks:
+  - name: Add public ip addresses to an dynamic inventory
+    add_host:
+      name: "{{ host }}"
+      groups: all
+
+  - local_action: wait_for port=22 host="{{ host }}" search_regex=OpenSSH delay=10
+```
+
 ### Create an aws instance
+```
 resource "aws_instance" "web" {
   ami = "ami-408c7f28"
   instance_type = "t1.micro"
-  tags {Name:test1}
+  tags { Name:test1 }
 }
+```
 
-## Aply the provisioner module to this resource
+### Apply the provisioner module to this resource
+```
 module "ansible_provisioner" {
-  source  = "github.com/cloudposse/tf_ansible"
-  ip = "${aws_instance.web.public_ip}"
-  playbook = "../ansible/playbooks/playbook.yml"
-}
+   source  = "github.com/cloudposse/tf_ansible"
+   envs = ["host=${aws_instance.web.public_ip}"]
+   playbook = "../ansible/playbooks/provisioner.yml"
+
+ }
+```
+
+
+
 

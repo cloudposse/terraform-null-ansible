@@ -1,8 +1,8 @@
 
-resource "null_resource" "ansible_provisioner" {
+resource "null_resource" "provisioner" {
 
   provisioner "local-exec" {
-    command = "ansible-playbook ${var.playbook} -e host=${var.ip}"
+    command = "ansible-playbook ${var.playbook} -e ${join("-e", var.envs)}"
   }
 
   lifecycle {
