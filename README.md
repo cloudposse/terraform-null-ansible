@@ -3,11 +3,11 @@
 ## Module usage
 
 ### Add special section to the playbook
-You must add this section on the top of playbook that will be used for provision
-
+You must add this section on the top of playbook that will be used for provision,
+because Ansible needs an inventory and you, in any case, should add target host to an inventory (runtime or file based)
 e.g. `../ansible/playbooks/playbook.yml`
 * Create a runtime inventorty with an ip address of a host
-* Waite for target host is ready for ssh connection
+* Wait for target host is ready for ssh connection
 
 ```
 ---

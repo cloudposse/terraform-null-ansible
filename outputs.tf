@@ -1,3 +1,3 @@
-output "ENVs" {
+output "envs" {
   value = "${var.envs}"
 }
