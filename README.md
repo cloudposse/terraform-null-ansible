@@ -36,7 +36,7 @@ resource "aws_instance" "web" {
 ```
 module "ansible_provisioner" {
    source  = "github.com/cloudposse/tf_ansible"
-   envs = ["host = ${aws_instance.web.public_ip}"]
+   envs = ["host=${aws_instance.web.public_ip}"]
    playbook = "../ansible/playbooks/provisioner.yml"
 
 }
