@@ -28,7 +28,7 @@ e.g. `../ansible/playbooks/playbook.yml`
 resource "aws_instance" "web" {
   ami = "ami-408c7f28"
   instance_type = "t1.micro"
-  tags { Name:test1 }
+  tags { Name = test1 }
 }
 ```
 
@@ -39,9 +39,5 @@ module "ansible_provisioner" {
    envs = ["host=${aws_instance.web.public_ip}"]
    playbook = "../ansible/playbooks/provisioner.yml"
 
- }
+}
 ```
-
-
-
-
