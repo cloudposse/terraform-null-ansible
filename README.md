@@ -26,19 +26,21 @@ e.g. `../ansible/playbooks/playbook.yml`
 ### Create an aws instance
 ```
 resource "aws_instance" "web" {
-  ami = "ami-408c7f28"
+  ami           = "ami-408c7f28"
   instance_type = "t1.micro"
-  tags { Name = test1 }
+  tags {
+    Name        = test1
+  }
 }
 ```
 
 ### Apply the provisioner module to this resource
 ```
 module "ansible_provisioner" {
-   source  = "github.com/cloudposse/tf_ansible"
+   source    = "github.com/cloudposse/tf_ansible"
    arguments = ["--ansible_ssh_user=ubuntu"]
-   envs = ["host=${aws_instance.web.public_ip}"]
-   playbook = "../ansible/playbooks/provisioner.yml"
+   envs      = ["host=${aws_instance.web.public_ip}"]
+   playbook  = "../ansible/playbooks/provisioner.yml"
 
 }
 ```
