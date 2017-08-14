@@ -23,9 +23,11 @@ e.g. `../ansible/playbooks/playbook.yml`
   - local_action: wait_for port=22 host="{{ host }}" search_regex=OpenSSH delay=10
 
 - hosts: all
+  gather_facts: False
+  become: True
   tasks:
   - name: Install python 2.7
-    raw: test -e /usr/bin/python || (apt -y update && apt install -y python)
+    raw: test -e /usr/bin/python || (apt-get -y update && apt-get install -y python)
     args:
       creates: /usr/bin/python
 ```
