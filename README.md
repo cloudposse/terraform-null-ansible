@@ -21,6 +21,13 @@ e.g. `../ansible/playbooks/playbook.yml`
       groups: all
 
   - local_action: wait_for port=22 host="{{ host }}" search_regex=OpenSSH delay=10
+
+- hosts: all
+  tasks:
+  - name: Install python 2.7
+    raw: test -e /usr/bin/python || (apt -y update && apt install -y python)
+    args:
+      creates: /usr/bin/python
 ```
 
 ### Create an aws instance
