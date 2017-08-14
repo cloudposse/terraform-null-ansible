@@ -2,7 +2,7 @@
 resource "null_resource" "provisioner" {
 
   provisioner "local-exec" {
-    command = "ansible-playbook ${var.playbook} -e ${join("-e", var.envs)}"
+    command = "ansible-playbook ${join(" ", var.arguments)} ${var.playbook} -e ${join("-e", var.envs)}"
   }
 
   lifecycle {
