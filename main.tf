@@ -1,6 +1,4 @@
-
 resource "null_resource" "provisioner" {
-
   provisioner "local-exec" {
     command = "ansible-playbook ${join(" ", var.arguments)} ${var.playbook} -e ${join("-e", var.envs)}"
   }
@@ -8,5 +6,4 @@ resource "null_resource" "provisioner" {
   lifecycle {
     create_before_destroy = true
   }
-
 }
