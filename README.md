@@ -21,23 +21,35 @@ e.g. `../ansible/playbooks/playbook.yml`
       groups: all
 
   - local_action: wait_for port=22 host="{{ host }}" search_regex=OpenSSH delay=10
+
+- hosts: all
+  gather_facts: False
+  become: True
+  tasks:
+  - name: Install python 2.7
+    raw: test -e /usr/bin/python || (apt-get -y update && apt-get install -y python)
+    args:
+      creates: /usr/bin/python
 ```
 
 ### Create an aws instance
 ```
 resource "aws_instance" "web" {
-  ami = "ami-408c7f28"
+  ami           = "ami-408c7f28"
   instance_type = "t1.micro"
-  tags { Name = test1 }
+  tags {
+    Name        = test1
+  }
 }
 ```
 
 ### Apply the provisioner module to this resource
 ```
 module "ansible_provisioner" {
-   source  = "github.com/cloudposse/tf_ansible"
-   envs = ["host=${aws_instance.web.public_ip}"]
-   playbook = "../ansible/playbooks/provisioner.yml"
+   source    = "github.com/cloudposse/tf_ansible"
+   arguments = ["--user=ubuntu"]
+   envs      = ["host=${aws_instance.web.public_ip}"]
+   playbook  = "../ansible/playbooks/provisioner.yml"
 
 }
 ```
