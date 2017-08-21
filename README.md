@@ -12,8 +12,7 @@ e.g. `../ansible/playbooks/playbook.yml`
 ```
 ---
 - hosts: localhost
-  vars:
-    gather_facts: true
+  gather_facts: True
   tasks:
   - name: Add public ip addresses to an dynamic inventory
     add_host:
@@ -47,9 +46,11 @@ resource "aws_instance" "web" {
 ```
 module "ansible_provisioner" {
    source    = "github.com/cloudposse/tf_ansible"
-   arguments = ["--user=ubuntu"]
+
+   arguments = ["--user=ubuntu", "--inventory-file=../ansible/inventory"]
    envs      = ["host=${aws_instance.web.public_ip}"]
    playbook  = "../ansible/playbooks/provisioner.yml"
+   dry_run   = false
 
 }
 ```
