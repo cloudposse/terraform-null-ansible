@@ -13,6 +13,7 @@ e.g. `../ansible/playbooks/playbook.yml`
 ---
 - hosts: localhost
   gather_facts: True
+  check_mode: no
   tasks:
   - name: Add public ip addresses to an dynamic inventory
     add_host:
@@ -23,6 +24,7 @@ e.g. `../ansible/playbooks/playbook.yml`
 
 - hosts: all
   gather_facts: False
+  check_mode: no
   become: True
   tasks:
   - name: Install python 2.7
@@ -47,9 +49,9 @@ resource "aws_instance" "web" {
 module "ansible_provisioner" {
    source    = "github.com/cloudposse/tf_ansible"
 
-   arguments = ["--user=ubuntu", "--inventory-file=../ansible/inventory"]
+   arguments = ["--user=ubuntu"]
    envs      = ["host=${aws_instance.web.public_ip}"]
-   playbook  = "../ansible/playbooks/provisioner.yml"
+   playbook  = "../ansible/playbooks/test.yml"
    dry_run   = false
 
 }
