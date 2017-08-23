@@ -3,8 +3,8 @@ resource "null_resource" "provisioner" {
 
   triggers {
     default = "${sha256(file(var.playbook))}"
-
   }
+
   provisioner "local-exec" {
     command = "ansible-playbook ${join(" ", var.arguments)} ${var.playbook} -e ${join("-e", var.envs)}"
   }
