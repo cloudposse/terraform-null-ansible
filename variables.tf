@@ -7,3 +7,7 @@ variable "envs" {
 }
 
 variable "playbook" {}
+
+variable "dry_run" {
+  default = true
+}
