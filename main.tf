@@ -6,7 +6,7 @@ resource "null_resource" "provisioner" {
   }
 
   provisioner "local-exec" {
-    command = "ansible-playbook ${var.dry_run ? "--check --diff" : ""} ${join(" ", var.arguments)} ${var.playbook} -e ${join("-e", var.envs)}"
+    command = "ansible-playbook ${var.dry_run ? "--check --diff" : ""} ${join(" ", var.arguments)} ${var.playbook} -e ${join(" -e ", var.envs)}"
   }
 
   lifecycle {
