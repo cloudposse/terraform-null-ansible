@@ -28,7 +28,12 @@ e.g. `../ansible/playbooks/playbook.yml`
   become: True
   tasks:
   - name: Install python 2.7
-    raw: test -e /usr/bin/python || (apt-get -y update && apt-get install -y python)
+    raw: >
+      test -e /usr/bin/python ||
+      (
+        (test -e /usr/bin/apt-get && (apt-get -y update && apt-get install -y python)) ||
+        (test -e /usr/bin/yum && (yum makecache fast && yum install -y python))
+      )
     args:
       creates: /usr/bin/python
 ```
