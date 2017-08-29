@@ -1,12 +1,18 @@
+data "null_data_source" "ansible" {
+  inputs = {
+    command = "ansible-playbook ${var.dry_run ? "--check --diff" : ""} ${join(" ", var.arguments)} -e ${join(" -e ", var.envs)} ${var.playbook}"
+  }
+}
+
 resource "null_resource" "provisioner" {
   count = "${signum(length(var.playbook)) == 1 ? 1 : 0}"
 
   triggers {
-    default = "${sha256(file(var.playbook))}"
+    default = "${data.null_data_source.ansible.command}"
   }
 
   provisioner "local-exec" {
-    command = "ansible-playbook ${var.dry_run ? "--check --diff" : ""} ${join(" ", var.arguments)} -e ${join(" -e ", var.envs)} ${var.playbook}"
+    command = "${data.null_data_source.ansible.command}"
   }
 
   lifecycle {
