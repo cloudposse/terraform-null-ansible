@@ -8,7 +8,7 @@ resource "null_resource" "provisioner" {
   count = "${signum(length(var.playbook)) == 1 ? 1 : 0}"
 
   triggers {
-    default = "${null_resource.ansible.triggers.command}"
+    default = "${sha256(file(var.playbook))}"
   }
 
   provisioner "local-exec" {
