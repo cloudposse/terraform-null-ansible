@@ -8,11 +8,11 @@ resource "null_resource" "provisioner" {
   count = "${signum(length(var.playbook)) == 1 ? 1 : 0}"
 
   triggers {
-    default = "${data.null_data_source.ansible.command}"
+    default = "${data.null_data_source.ansible.inputs.command}"
   }
 
   provisioner "local-exec" {
-    command = "${data.null_data_source.ansible.command}"
+    command = "${data.null_data_source.ansible.inputs.command}"
   }
 
   lifecycle {
