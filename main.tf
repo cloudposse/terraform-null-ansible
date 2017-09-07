@@ -1,9 +1,18 @@
+data "external" "size" {
+  program = ["sh", "${path.module}/size.sh"]
+
+  query = {
+    path = "${dirname(var.playbook)}"
+  }
+}
+
 resource "null_resource" "provisioner" {
-  count = "${signum(length(var.playbook)) == 1 ? 1 : 0}"
+  count      = "${signum(length(var.playbook)) == 1 ? 1 : 0}"
+  depends_on = ["data.external.size"]
 
   triggers {
-    signature = "${sha256(dirname(var.playbook))}"
-    command   = "ansible-playbook ${var.dry_run ? "--check --diff" : ""} ${join(" ", var.arguments)} -e ${join(" -e ", var.envs)} ${var.playbook}"
+    check_size = "${data.external.size.result}"
+    command    = "ansible-playbook ${var.dry_run ? "--check --diff" : ""} ${join(" ", var.arguments)} -e ${join(" -e ", var.envs)} ${var.playbook}"
   }
 
   provisioner "local-exec" {
