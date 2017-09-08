@@ -11,8 +11,8 @@ resource "null_resource" "provisioner" {
   depends_on = ["data.external.md5sum"]
 
   triggers {
-    check_size = "${jsonencode(data.external.md5sum.result)}"
-    command    = "ansible-playbook ${var.dry_run ? "--check --diff" : ""} ${join(" ", var.arguments)} -e ${join(" -e ", var.envs)} ${var.playbook}"
+    signature = "${jsonencode(data.external.md5sum.result)}"
+    command   = "ansible-playbook ${var.dry_run ? "--check --diff" : ""} ${join(" ", var.arguments)} -e ${join(" -e ", var.envs)} ${var.playbook}"
   }
 
   provisioner "local-exec" {
