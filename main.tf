@@ -1,4 +1,4 @@
-data "archive_file" "md5sum" {
+data "archive_file" "default" {
   type        = "zip"
   source_dir  = "${dirname(var.playbook)}"
   output_path = "${path.module}/playbook.zip"
@@ -6,15 +6,15 @@ data "archive_file" "md5sum" {
 
 resource "null_resource" "provisioner" {
   count      = "${signum(length(var.playbook)) == 1 ? 1 : 0}"
-  depends_on = ["data.archive_file.md5sum"]
+  depends_on = ["data.archive_file.default"]
 
   triggers {
-    signature = "${data.archive_file.md5sum.output_md5}"
+    signature = "${data.archive_file.default.output_md5}"
     command   = "ansible-playbook ${var.dry_run ? "--check --diff" : ""} ${join(" ", var.arguments)} -e ${join(" -e ", var.envs)} ${var.playbook}"
   }
 
   provisioner "local-exec" {
-    command = "rm -rf ${path.module}/playbook.zip"
+    command = "rm -rf ${data.archive_file.default.output_path}"
   }
 
   provisioner "local-exec" {
