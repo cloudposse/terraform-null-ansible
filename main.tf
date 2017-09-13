@@ -14,7 +14,7 @@ resource "null_resource" "provisioner" {
   }
 
   provisioner "local-exec" {
-    command = "rm -rf ${data.archive_file.default.output_path}"
+    command = "rm -f ${data.archive_file.default.output_path}"
   }
 
   provisioner "local-exec" {
