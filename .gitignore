@@ -8,4 +8,4 @@
 # Local values for vars
 terraform.tfvars
 
-playbook.zip
+*.zip

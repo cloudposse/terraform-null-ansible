@@ -1,8 +1,4 @@
 resource "random_id" "default" {
-  keepers = {
-    trigger = "${timestamp()}"
-  }
-
   byte_length = 8
 }
 
@@ -10,7 +6,8 @@ data "archive_file" "default" {
   type        = "zip"
   source_dir  = "${dirname(var.playbook)}"
   output_path = "${path.module}/${random_id.default.hex}.zip"
-  depends_on  = ["random_id.default"]
+
+  depends_on = ["random_id.default"]
 }
 
 resource "null_resource" "provisioner" {
@@ -42,13 +39,4 @@ resource "null_resource" "cleanup" {
   }
 
   depends_on = ["data.archive_file.default"]
-}
-
-### DEBUG
-output "test" {
-  value = "${random_id.default.hex}"
-}
-
-output "md5" {
-  value = "${data.archive_file.default.output_md5}"
 }
