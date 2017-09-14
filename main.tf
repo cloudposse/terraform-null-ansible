@@ -1,20 +1,26 @@
+resource "random_id" "default" {
+  keepers = {
+    trigger = "${timestamp()}"
+  }
+
+  byte_length = 8
+}
+
 data "archive_file" "default" {
   type        = "zip"
   source_dir  = "${dirname(var.playbook)}"
-  output_path = "${path.module}/playbook.zip"
+  output_path = "${path.module}/${random_id.default.hex}.zip"
+  depends_on  = ["random_id.default"]
 }
 
 resource "null_resource" "provisioner" {
-  count      = "${signum(length(var.playbook)) == 1 ? 1 : 0}"
+  count = "${signum(length(var.playbook)) == 1 ? 1 : 0}"
+
   depends_on = ["data.archive_file.default"]
 
   triggers {
     signature = "${data.archive_file.default.output_md5}"
     command   = "ansible-playbook ${var.dry_run ? "--check --diff" : ""} ${join(" ", var.arguments)} -e ${join(" -e ", var.envs)} ${var.playbook}"
-  }
-
-  provisioner "local-exec" {
-    command = "rm -f ${data.archive_file.default.output_path}"
   }
 
   provisioner "local-exec" {
@@ -24,4 +30,25 @@ resource "null_resource" "provisioner" {
   lifecycle {
     create_before_destroy = true
   }
+}
+
+resource "null_resource" "cleanup" {
+  triggers {
+    default = "${random_id.default.hex}"
+  }
+
+  provisioner "local-exec" {
+    command = "rm -f ${data.archive_file.default.output_path}"
+  }
+
+  depends_on = ["data.archive_file.default"]
+}
+
+### DEBUG
+output "test" {
+  value = "${random_id.default.hex}"
+}
+
+output "md5" {
+  value = "${data.archive_file.default.output_md5}"
 }
