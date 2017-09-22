@@ -1,15 +1,21 @@
-# tf_ansible
+# terraform-null-ansible
+
+Terraform Module to run ansible playbooks.
 
 ## Module usage
 
 ### Add special section to the playbook
-You must add this section on the top of playbook that will be used for provision,
-because Ansible needs an inventory and you, in any case, should add target host to an inventory (runtime or file based)
+
+You must add this section on the top of all playbooks that will be used for provisioning.
+
+This will add a dynamic inventory to target the host that needs provisioning.
+
 e.g. `../ansible/playbooks/playbook.yml`
+
 * Create a runtime inventorty with an ip address of a host
 * Wait for target host is ready for ssh connection
 
-```
+```yaml
 ---
 - hosts: localhost
   gather_facts: True
@@ -39,7 +45,8 @@ e.g. `../ansible/playbooks/playbook.yml`
 ```
 
 ### Create an aws instance
-```
+
+```hcl
 resource "aws_instance" "web" {
   ami           = "ami-408c7f28"
   instance_type = "t1.micro"
@@ -50,7 +57,8 @@ resource "aws_instance" "web" {
 ```
 
 ### Apply the provisioner module to this resource
-```
+
+```hcl
 module "ansible_provisioner" {
    source    = "github.com/cloudposse/tf_ansible"
 
