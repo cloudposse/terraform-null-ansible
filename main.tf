@@ -6,8 +6,6 @@ data "archive_file" "default" {
   type        = "zip"
   source_dir  = "${dirname(var.playbook)}"
   output_path = "${path.module}/${random_id.default.hex}.zip"
-
-  depends_on = ["random_id.default"]
 }
 
 resource "null_resource" "provisioner" {
