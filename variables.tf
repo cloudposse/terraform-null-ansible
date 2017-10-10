@@ -1,10 +1,10 @@
 variable "arguments" {
-  default = [""]
+  default = []
   type    = "list"
 }
 
 variable "envs" {
-  default = [""]
+  default = []
   type    = "list"
 }
 
