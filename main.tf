@@ -15,11 +15,11 @@ resource "null_resource" "provisioner" {
 
   triggers {
     signature = "${data.archive_file.default.output_md5}"
-    command   = "ansible-playbook ${var.dry_run ? "--check --diff" : ""} ${join(" ", compact(var.arguments))} ${length(compact(var.envs)) > 0 ? "-e" : ""} ${length(compact(var.envs)) > 0 ? join(" -e ", var.envs) : ""} ${var.playbook}"
+    command   = "ansible-playbook ${var.dry_run ? "--check --diff" : ""} ${join(" ", compact(var.arguments))} ${length(compact(var.envs)) > 0 ? "-e" : ""} ${join(" -e ", compact(var.envs))} ${var.playbook}"
   }
 
   provisioner "local-exec" {
-    command = "ansible-playbook ${var.dry_run ? "--check --diff" : ""} ${join(" ", compact(var.arguments))} ${length(compact(var.envs)) > 0 ? "-e" : ""} ${length(compact(var.envs)) > 0 ? join(" -e ", var.envs) : ""} ${var.playbook}"
+    command = "ansible-playbook ${var.dry_run ? "--check --diff" : ""} ${join(" ", compact(var.arguments))} ${length(compact(var.envs)) > 0 ? "-e" : ""} ${join(" -e ", compact(var.envs))} ${var.playbook}"
   }
 
   lifecycle {
