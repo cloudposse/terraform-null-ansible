@@ -1,12 +1,16 @@
 variable "arguments" {
-  type = "list"
+  default = []
+  type    = "list"
 }
 
 variable "envs" {
-  type = "list"
+  default = []
+  type    = "list"
 }
 
-variable "playbook" {}
+variable "playbook" {
+  default = ""
+}
 
 variable "dry_run" {
   default = true

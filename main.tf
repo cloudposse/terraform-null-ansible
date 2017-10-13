@@ -6,8 +6,6 @@ data "archive_file" "default" {
   type        = "zip"
   source_dir  = "${dirname(var.playbook)}"
   output_path = "${path.module}/${random_id.default.hex}.zip"
-
-  depends_on = ["random_id.default"]
 }
 
 resource "null_resource" "provisioner" {
@@ -17,11 +15,11 @@ resource "null_resource" "provisioner" {
 
   triggers {
     signature = "${data.archive_file.default.output_md5}"
-    command   = "ansible-playbook ${var.dry_run ? "--check --diff" : ""} ${join(" ", var.arguments)} -e ${join(" -e ", var.envs)} ${var.playbook}"
+    command   = "ansible-playbook ${var.dry_run ? "--check --diff" : ""} ${join(" ", compact(var.arguments))} ${length(compact(var.envs)) > 0 ? "-e" : ""} ${join(" -e ", compact(var.envs))} ${var.playbook}"
   }
 
   provisioner "local-exec" {
-    command = "ansible-playbook ${var.dry_run ? "--check --diff" : ""} ${join(" ", var.arguments)} -e ${join(" -e ", var.envs)} ${var.playbook}"
+    command = "ansible-playbook ${var.dry_run ? "--check --diff" : ""} ${join(" ", compact(var.arguments))} ${length(compact(var.envs)) > 0 ? "-e" : ""} ${join(" -e ", compact(var.envs))} ${var.playbook}"
   }
 
   lifecycle {
@@ -37,6 +35,4 @@ resource "null_resource" "cleanup" {
   provisioner "local-exec" {
     command = "rm -f ${data.archive_file.default.output_path}"
   }
-
-  depends_on = ["data.archive_file.default"]
 }
