@@ -8,4 +8,6 @@
 # Local values for vars
 terraform.tfvars
 
+.build-harness
+
 *.zip
