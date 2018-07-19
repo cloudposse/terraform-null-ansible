@@ -1,0 +1,124 @@
+---
+#
+# This is the canonical configuration for the `README.md`
+# Run `make readme` to rebuild the `README.md`
+#
+
+# Name of this project
+name: terraform-null-ansible
+
+# Logo for this project
+#logo: docs/logo.png
+
+# License of this project
+license: "APACHE2"
+
+# Canonical GitHub repo
+github_repo: cloudposse/terraform-null-ansible
+
+# Badges to display
+badges:
+  - name: "Build Status"
+    image: "https://travis-ci.org/cloudposse/terraform-null-ansible.svg?branch=master"
+    url: "https://travis-ci.org/cloudposse/terraform-null-ansible"
+  - name: "Latest Release"
+    image: "https://img.shields.io/github/release/cloudposse/terraform-null-ansible.svg"
+    url: "https://github.com/cloudposse/terraform-null-ansible/releases/latest"
+  - name: "Slack Community"
+    image: "https://slack.cloudposse.com/badge.svg"
+    url: "https://slack.cloudposse.com"
+
+related:
+  - name: "terraform-null-label"
+    description: "Terraform Module to define a consistent naming convention by (namespace, stage, name, [attributes])"
+    url: "https://github.com/cloudposse/terraform-null-label"
+
+# Short description of this project
+description: |-
+  Terraform Module to run ansible playbooks.
+
+# How to use this project
+usage: |-
+  ### Add special section to the playbook
+
+  You must add this section on the top of all playbooks that will be used for provisioning.
+
+  This will add a dynamic inventory to target the host that needs provisioning.
+
+  e.g. `../ansible/playbooks/playbook.yml`
+
+  * Create a runtime inventorty with an ip address of a host
+  * Wait for target host is ready for ssh connection
+
+  ```yaml
+
+  ---
+  - hosts: localhost
+    gather_facts: True
+    check_mode: no
+    tasks:
+    - name: Add public ip addresses to an dynamic inventory
+      add_host:
+        name: "{{ host }}"
+        groups: all
+
+    - local_action: wait_for port=22 host="{{ host }}" search_regex=OpenSSH delay=10
+
+  - hosts: all
+    gather_facts: False
+    check_mode: no
+    become: True
+    tasks:
+    - name: Install python 2.7
+      raw: >
+        test -e /usr/bin/python ||
+        (
+          (test -e /usr/bin/apt-get && (apt-get -y update && apt-get install -y python)) ||
+          (test -e /usr/bin/yum && (yum makecache fast && yum install -y python))
+        )
+      args:
+        creates: /usr/bin/python
+  ```
+
+  ### Create an aws instance
+
+  ```hcl
+  resource "aws_instance" "web" {
+    ami           = "ami-408c7f28"
+    instance_type = "t1.micro"
+    tags {
+      Name        = test1
+    }
+  }
+  ```
+
+  ### Apply the provisioner module to this resource
+
+  ```hcl
+  module "ansible_provisioner" {
+    source    = "github.com/cloudposse/tf_ansible"
+
+    arguments = ["--user=ubuntu"]
+    envs      = ["host=${aws_instance.web.public_ip}"]
+    playbook  = "../ansible/playbooks/test.yml"
+    dry_run   = false
+
+  }
+  ```
+
+include:
+  - "docs/targets.md"
+  - "docs/terraform.md"
+
+# Contributors to this project
+contributors:
+  - name: "Erik Osterman"
+    github: "osterman"
+  - name: "Igor Rodionov"
+    github: "goruha"
+  - name: "Sergey Vasilyev"
+    github: "s2504s"
+  - name: "Vladimir"
+    github: "SweetOps"
+  - name: "Konstantin B"
+    github: "comeanother"
