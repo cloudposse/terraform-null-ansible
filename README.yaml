@@ -7,6 +7,20 @@
 # Name of this project
 name: terraform-null-ansible
 
+# Tags of this project
+tags:
+  - aws
+  - terraform
+  - terraform-modules
+  - supported
+  - ansible
+  - playbook
+  - ansible-playbook
+
+# Categories of this project
+categories:
+  - terraform-modules/supported
+
 # Logo for this project
 #logo: docs/logo.png
 
