@@ -13,7 +13,7 @@ resource "null_resource" "provisioner" {
 
   depends_on = ["data.archive_file.default"]
 
-  triggers {
+  triggers = {
     signature = "${data.archive_file.default.output_md5}"
     command   = "ansible-playbook ${var.dry_run ? "--check --diff" : ""} ${join(" ", compact(var.arguments))} ${length(compact(var.envs)) > 0 ? "-e" : ""} ${join(" -e ", compact(var.envs))} ${var.playbook}"
   }
@@ -28,7 +28,7 @@ resource "null_resource" "provisioner" {
 }
 
 resource "null_resource" "cleanup" {
-  triggers {
+  triggers = {
     default = "${random_id.default.hex}"
   }
 
