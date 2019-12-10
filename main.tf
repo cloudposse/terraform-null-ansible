@@ -4,19 +4,19 @@ resource "random_id" "default" {
 
 data "archive_file" "default" {
   type        = "zip"
-  source_dir  = "${dirname(var.playbook)}"
+  source_dir  = dirname(var.playbook)
   output_path = "${path.module}/${random_id.default.hex}.zip"
 }
 
 resource "null_resource" "provisioner" {
-  count = "${signum(length(var.playbook)) == 1 ? 1 : 0}"
+  count = signum(length(var.playbook)) == 1 ? 1 : 0
 
   depends_on = [
     data.archive_file.default,
   ]
 
   triggers = {
-    signature = "${data.archive_file.default.output_md5}"
+    signature = data.archive_file.default.output_md5
     command   = "ansible-playbook ${var.dry_run ? "--check --diff" : ""} ${join(" ", compact(var.arguments))} ${length(compact(var.envs)) > 0 ? "-e" : ""} ${join(" -e ", compact(var.envs))} ${var.playbook}"
   }
 
@@ -31,7 +31,7 @@ resource "null_resource" "provisioner" {
 
 resource "null_resource" "cleanup" {
   triggers = {
-    default = "${random_id.default.hex}"
+    default = random_id.default.hex
   }
 
   provisioner "local-exec" {
