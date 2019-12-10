@@ -11,7 +11,9 @@ data "archive_file" "default" {
 resource "null_resource" "provisioner" {
   count = "${signum(length(var.playbook)) == 1 ? 1 : 0}"
 
-  depends_on = data.archive_file.default
+  depends_on = [
+    data.archive_file.default,
+  ]
 
   triggers = {
     signature = "${data.archive_file.default.output_md5}"
