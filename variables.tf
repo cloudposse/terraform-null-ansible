@@ -1,21 +1,21 @@
 variable "arguments" {
-  default = []
-  type    = "list"
+  default     = []
+  type        = list(string)
   description = "Arguments"
 }
 
 variable "envs" {
-  default = []
-  type    = "list"
+  default     = []
+  type        = list(string)
   description = "Environment variables"
 }
 
 variable "playbook" {
-  default = ""
+  default     = ""
   description = "Playbook to run"
 }
 
 variable "dry_run" {
-  default = true
+  default     = true
   description = "Do dry run"
 }
