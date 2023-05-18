@@ -1,7 +1,7 @@
 terraform {
   required_providers {
     archive = {
-      version = "~> 2.2.0"
+      version = "~> 2.3.0"
     }
     null = {
       version = "~> 3.1.0"
